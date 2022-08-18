@@ -3,11 +3,21 @@ import MenuItem from './MenuItem.js';
 import DishDetail from './DishDetail.js';
 import { CardColumns, Modal, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { connect } from 'react-redux';
+import * as actionType from '../../redux/actionType';
 
 const mapStateToProps = state => {
     return {
         dishes: state.dishes,
         comments: state.comments
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addComment: (dishId, author, rating, comment) => dispatch({
+            type: actionType.ADD_COMMENT,
+            payload: { dishId, author, rating, comment }
+        })
     }
 }
 
@@ -19,11 +29,11 @@ class Menu extends Component {
     }
 
     onDishSelete = dish => {
-        console.log(dish);
         this.setState({
             selectedDish: dish,
             modalOpen: !this.state.modalOpen
         })
+        // console.log(this.props);
     }
 
     toggleModal = () => {
@@ -45,13 +55,17 @@ class Menu extends Component {
         if (this.state.selectedDish) {
             const { selectedDish } = this.state;
             const comments = this.props.comments.filter(dish => dish.dishId === selectedDish.id)
-            dishDetail = <DishDetail dish={selectedDish} comments={comments} />
+            dishDetail = <DishDetail
+                dish={selectedDish}
+                comments={comments}
+                addComment={this.props.addComment}
+            />
         }
         return (
             <div className='container'>
                 <div className="row">
                     <CardColumns>{menu}</CardColumns>
-                    <Modal isOpen={this.state.modalOpen} onClick={this.toggleModal}>
+                    <Modal isOpen={this.state.modalOpen}>
                         <ModalBody>
                             {dishDetail}
                         </ModalBody>
@@ -68,4 +82,4 @@ class Menu extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Menu);
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
