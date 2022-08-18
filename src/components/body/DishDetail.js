@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardBody, CardImg, CardText, CardTitle } from 'reactstrap'
 import LoadComment from './LoadComment';
 
-function DishDetail({dish}) {
+function DishDetail({dish, comments}) {
   return (
     <div>
       <Card style={{margin: '10px'}}>
@@ -11,7 +11,7 @@ function DishDetail({dish}) {
           <CardTitle>{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
           <hr />
-          <LoadComment comments={dish.comments} />
+          <LoadComment comments={comments} />
         </CardBody>
       </Card>
     </div>
