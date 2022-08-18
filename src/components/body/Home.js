@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react';
 
-function Home() {
-  document.title = 'Bohubrihi Restaurant'
-  return (
-    <div>Home</div>
-  )
+class Home extends Component {
+  
+  render () {
+    document.title = 'Bohubrihi Restaurant'
+    return (
+      <div>Home</div>
+    )
+  }
 }
 
-export default Home
+export default Home;
