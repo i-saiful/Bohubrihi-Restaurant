@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
-import { LocalForm, Control, Errors } from 'react-redux-form'
+import { Button, FormGroup, Label, Col } from 'reactstrap';
+import { Form, Control, Errors, actions } from 'react-redux-form';
+import { connect } from 'react-redux';
+
+const mapDispatchToProps = dispactch => ({
+  resetFeedbackForm: () => dispactch(actions.reset('feedback'))
+})
+
+const required = val => val && val.length
+const isNumber = val => !isNaN(Number(val))
+const validMail = mail => /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/i.test(mail);
 
 class Contact extends Component {
 
-  handleSubmit = e => {
-    console.log(e);
+  handleSubmit = values => {
+    console.log(values);
+    this.props.resetFeedbackForm();
   }
 
   render() {
     document.title = 'Contact'
-    const { firstName, lastName, telNumber, email, agree, contactType, message } = this.state;
+
     return (
       <div className='container'>
         <div className="row row-content" style={{ paddingLeft: '20px', textAlign: 'left' }}>
@@ -18,7 +28,7 @@ class Contact extends Component {
             <h3>Send us Feedback</h3>
           </div>
           <div className="col-12 col-md-7">
-            <LocalForm onSubmit={e => this.handleSubmit(e)}>
+            <Form model='feedback' onSubmit={e => this.handleSubmit(e)}>
               <FormGroup row>
                 <Label md={2} htmlFor='firstName'>First Name</Label>
                 <Col md={10}>
@@ -27,6 +37,15 @@ class Contact extends Component {
                     name="firstName"
                     model='.firstName'
                     className='form-control'
+                    validators={{ required }}
+                  />
+                  <Errors
+                    model='.firstName'
+                    className='text-danger'
+                    show='touched'
+                    messages={{
+                      required: "Required"
+                    }}
                   />
                 </Col>
               </FormGroup>
@@ -39,6 +58,15 @@ class Contact extends Component {
                     name="lastName"
                     model='.lastName'
                     className='form-control'
+                    validators={{ required }}
+                  />
+                  <Errors
+                    model='.lastName'
+                    className='text-danger'
+                    show='touched'
+                    messages={{
+                      required: "Required"
+                    }}
                   />
                 </Col>
               </FormGroup>
@@ -51,6 +79,16 @@ class Contact extends Component {
                     name="telNumber"
                     model='.telNumber'
                     className='form-control'
+                    validators={{ required, isNumber }}
+                  />
+                  <Errors
+                    model='.telNumber'
+                    className='text-danger'
+                    show='touched'
+                    messages={{
+                      required: "Required, ",
+                      isNumber: "Invalid Number"
+                    }}
                   />
                 </Col>
               </FormGroup>
@@ -63,6 +101,16 @@ class Contact extends Component {
                     name="email"
                     model='.email'
                     className='form-control'
+                    validators={{ required, validMail }}
+                  />
+                  <Errors
+                    model='.email'
+                    className='text-danger'
+                    show='touched'
+                    messages={{
+                      required: "Required, ",
+                      validMail: "Invalid Email"
+                    }}
                   />
                 </Col>
               </FormGroup>
@@ -74,7 +122,7 @@ class Contact extends Component {
                       <Control.checkbox
                         model=".agree"
                         name='agree'
-                        className='form-check-input' 
+                        className='form-check-input'
                       />
                       <strong>May we contact you?</strong>
                     </Label>
@@ -102,6 +150,15 @@ class Contact extends Component {
                     model='.message'
                     rows='12'
                     className='form-control'
+                    validators={{ required }}
+                  />
+                  <Errors
+                    model='.message'
+                    className='text-danger'
+                    show='touched'
+                    messages={{
+                      required: "Required"
+                    }}
                   />
                 </Col>
               </FormGroup>
@@ -111,7 +168,7 @@ class Contact extends Component {
                   <Button type="submit" color='primary'>Send Feedback</Button>
                 </Col>
               </FormGroup>
-            </LocalForm>
+            </Form>
           </div>
         </div>
       </div>
@@ -119,4 +176,4 @@ class Contact extends Component {
   }
 }
 
-export default Contact
+export default connect(null, mapDispatchToProps)(Contact);
